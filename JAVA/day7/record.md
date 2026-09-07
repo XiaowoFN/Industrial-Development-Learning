@@ -239,3 +239,110 @@ Java 16 及以上还可以使用模式匹配，但当前课程/公司兼容基�
 [待巩固] ClassCastException 和 instanceof 安全判断
 [待学习] 抽象类、接口及它们与多态的结合
 ```
+
+### 12. `多态练习`：Animal、Cat、Dog
+
+本次新增“多态练习”包，包含 `Animal`、`Cat`、`Dog` 和 `Test`。
+
+父类 `Animal` 封装了所有动物共有的数据和行为：
+
+```java
+private String name;
+private int age;
+
+public void eat() {
+    System.out.println("动物要吃饭");
+}
+```
+
+`Cat` 和 `Dog` 继承 `Animal`，分别重写 `eat()`。这体现了抽象共同属性、继承共同代码、通过重写表达不同行为。
+
+### 13. 子类构造方法使用 `super`
+
+`Cat` 和 `Dog` 都定义了无参、有参构造方法：
+
+```java
+public Cat(String name, int age) {
+    super(name, age);
+}
+```
+
+`super(name, age)` 调用父类 `Animal(String name, int age)` 构造方法，初始化父类中的私有成员变量。因为 `name` 和 `age` 是 `private`，子类不能直接赋值，但可以通过父类构造方法完成初始化。
+
+`super(...)` 必须放在子类构造方法的第一行。子类无参构造方法没有显式写 `super()` 时，Java 会自动调用父类无参构造方法。
+
+### 14. 两种对象初始化方式
+
+第一种：无参构造方法加 Setter：
+
+```java
+Animal c = new Cat();
+c.setName("依依");
+c.setAge(1);
+```
+
+第二种：有参构造方法直接初始化：
+
+```java
+Animal c = new Cat("小安", 2);
+```
+
+两种方式都能创建完整对象。有参构造更简洁，Setter 适合创建对象后再修改属性。
+
+虽然变量类型是 `Animal`，实际对象是 `Cat` 或 `Dog`，调用 `c.eat()`、`d.eat()` 时执行对应子类的重写方法，进一步验证了成员方法的多态。
+
+本次运行结果：
+
+```text
+依依1
+小猫爱吃小鱼干
+小安2
+小猫爱吃小鱼干
+wangwang3
+小狗爱吃是
+wangwang3
+小狗爱吃是
+```
+
+`Dog.eat()` 中的“小狗爱吃是”可能是练习时的文字笔误，不影响继承和多态逻辑。
+
+### 15. 抽象类入门进度
+
+新建了“抽象类”包，并记录了概念：没有方法体的方法可以声明为抽象方法；类中如果包含抽象方法，该类必须声明为抽象类。
+
+标准形式：
+
+```java
+public abstract class Animal {
+    public abstract void eat();
+}
+```
+
+需要注意：当前“抽象类/Animal.java”仍然是普通空类，还没有使用 `abstract`；目前属于概念预习，尚未完成抽象类的实际代码练习。
+
+抽象方法只有方法声明，没有方法体；具体子类需要重写并实现它。抽象类不能直接 `new`，但可以作为父类引用类型使用：
+
+```java
+Animal animal = new Cat();
+```
+
+### 16. day7 学习进度更新
+
+```text
+[已完成] 多态中父类引用指向子类对象
+[已完成] 父类抽取共同属性和行为
+[已完成] 子类使用 super 调用父类有参构造方法
+[已完成] 无参构造 + Setter 和有参构造两种初始化方式
+[已完成] Cat、Dog 重写 eat 并通过多态调用
+[进行中] 抽象类和抽象方法
+[待学习] 抽象类子类实现、接口、instanceof 安全转型
+```
+
+### 17. 当前 day7 代码基线
+
+从现在开始，`day7` 里新写的代码都继续往这里追加记录。当前源码主要分成三块：
+
+- `多态`：`animal` 作为父类，`cat`、`dog`、`pig` 继承后分别重写 `eat()`；`duotai.main()` 演示了父类引用指向子类对象、成员变量看左边、成员方法看右边，以及 `use.useAnimal(animal a)` 统一接收不同子类对象。
+- `多态练习`：`Animal` 封装 `name`、`age`，提供 getter/setter 和无参/有参构造；`Cat`、`Dog` 通过 `super(name, age)` 初始化父类数据，`Test.main()` 验证了两种初始化方式和多态调用。
+- `转型`：`Test.main()` 演示向上转型、向下转型和 `playGame()` 的调用边界，重点是先确认真实类型再强转。
+- `抽象类`：`main.java` 先记录抽象类、抽象方法的概念，`Animal.java` 目前还是普通类，后面再补真正的 `abstract` 实现。
