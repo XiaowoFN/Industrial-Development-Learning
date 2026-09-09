@@ -479,6 +479,7 @@ System.out.println(c.getName() + "，" + c.getAge() + "岁");
 [已完成] 通过多态调用 Cat、Dog 的 eat()
 [待补充] 无参构造方法和 setter 的测试
 [待巩固] 构造方法参数顺序和测试输出的规范性
+```
 
 ### 22. 关于 `Dog.eat()` 输出内容的说明
 
@@ -491,4 +492,248 @@ System.out.println("小狗爱吃屎");
 改成“小狗爱吃骨头”，只是为了让教学案例中的表达更常见、更自然，不是因为原代码存在语法或逻辑错误。
 
 用户明确选择保留“小狗爱吃屎”。该输出属于自定义业务文本，不影响抽象类、方法重写和多态调用，因此保留原实现，不修改 `Dog.java`。
+
+### 23. day8 模块与 day7 不一致的原因
+
+本次检查 `E:\cyr\industrial-development-learning\JAVA` 目录时，实际存在的模块只有：
+
+```text
+day1
+day2
+day3
+day4
+day5
+day6
+day7
+```
+
+其中 `day1` 到 `day7` 都包含 `pom.xml` 和 `src/main/java`，属于已经创建完整的 Maven 项目结构。
+
+当前磁盘上没有找到 `JAVA/day8` 目录，也没有找到 `JAVA/day8/pom.xml`。但是 IDEA 配置文件 `.idea/misc.xml` 中已经记录了：
+
+```text
+$PROJECT_DIR$/JAVA/day8/pom.xml
+```
+
+这说明 IDEA 记住了一个 `day8` Maven 项目路径，但这个路径对应的实际文件并不存在。常见原因：
+
+- 新建模块时只在 IDEA 配置里添加了 Maven 路径，但文件夹或 `pom.xml` 没有创建成功。
+- 新建时路径选错，`day8` 被建到了其他位置。
+- `day8` 文件夹被删除了，但 IDEA 还保留了旧的 Maven 项目记录。
+- IDEA 还没有刷新项目结构。
+
+要让 `day8` 和 `day7` 一样，应确保真实存在：
+
+```text
+JAVA/day8/pom.xml
+JAVA/day8/src/main/java
+```
+
+如果 IDEA 里显示异常，可以先删除无效的 day8 Maven 项目记录，再重新按 day7 的结构创建或导入。
+
+### 24. 清理 day8 无效模块痕迹
+
+用户删除了之前创建异常的 `day8`，为了后续重新创建，需要清理 IDEA 中残留的无效配置。
+
+本次清理位置：
+
+```text
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/workspace.xml
+```
+
+清理内容包括：
+
+- `day8` 的编译目标配置。
+- `JAVA/day8/src/main/java` 和 `JAVA/day8/src/main/resources` 的编码配置。
+- Maven 项目列表中的 `JAVA/day8/pom.xml`。
+- IDEA workspace 中指向 `JAVA/day8/src/main/java/day8/Main.java` 的调试路径和断点。
+
+复查结果：
+
+```text
+.idea 中已经没有 day8
+JAVA/day8 目录不存在
+```
+
+因此现在可以重新创建 `day8`。建议创建后确认结构与 `day7` 一致：
+
+```text
+JAVA/day8
+├── pom.xml
+└── src
+    └── main
+        └── java
+```
+
+### 25. day7 的 Maven 结构与 day8 创建方式
+
+`day7` 是一个独立 Maven 项目，核心结构是：
+
+```text
+JAVA/day7
+├── pom.xml
+└── src
+    └── main
+        └── java
+```
+
+其中：
+
+- `pom.xml` 是 Maven 项目的配置文件。
+- `src/main/java` 是 Java 源代码目录。
+- `target` 是编译后自动生成的目录，不需要手动创建，也不需要提交到 Git。
+
+当前仓库不是一个统一父级 `pom.xml` 管理所有 day 模块的多模块 Maven 项目，而是 `day1` 到 `day7` 各自都有自己的 `pom.xml`，在 IDEA 中分别作为 Maven 项目导入。
+
+创建 `day8` 时，应让它和 `day7` 保持同样结构：
+
+```text
+JAVA/day8
+├── pom.xml
+└── src
+    └── main
+        └── java
+```
+
+在 IDEA 中推荐方式：
+
+1. 右键 `JAVA` 目录。
+2. 选择 `New -> Module`。
+3. 构建系统选择 `Maven`。
+4. 模块名填写 `day8`。
+5. 路径确认是 `E:\cyr\industrial-development-learning\JAVA\day8`。
+6. JDK 选择和 day7 一致的 JDK 11。
+7. 创建完成后确认有 `pom.xml` 和 `src/main/java`。
+
+如果 IDEA 没有自动创建完整目录，也可以手动创建 `JAVA/day8/src/main/java`，再添加一个和 day7 类似的 `pom.xml`。
+
+### 26. IDEA 右键菜单没有 `Module`
+
+用户在 IDEA 中右键目录时，新建菜单里没有看到 `Module`。这个菜单主要用于新建普通文件、目录、Java 类、HTML 文件等，不一定显示模块创建入口。
+
+创建 Maven 模块更可靠的入口是：
+
+```text
+File -> New -> Module
+```
+
+如果顶部菜单也没有 `Module`，可以使用：
+
+```text
+File -> Project Structure -> Modules -> + -> New Module
+```
+
+也可以直接按 `day7` 的结构手动创建：
+
+```text
+JAVA/day8
+├── pom.xml
+└── src
+    └── main
+        └── java
+```
+
+然后在 IDEA 的 Maven 面板中点击 `+` 或 `Add Maven Project`，选择：
+
+```text
+JAVA/day8/pom.xml
+```
+
+这样 `day8` 也会被 IDEA 识别为 Maven 项目。
+
+### 27. 新建 day8 后文件结构与 day7 不完全一样
+
+用户重新创建 `day8` 后，检查到当前结构为：
+
+```text
+JAVA/day8
+├── .mvn
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   └── resources
+    └── test
+        └── java
+```
+
+`day7` 的核心结构为：
+
+```text
+JAVA/day7
+├── pom.xml
+└── src
+    └── main
+        └── java
+```
+
+两者不一样的原因是：`day8` 是通过 IDEA 新建 Maven 项目时生成的更完整标准结构，而 `day7` 是更精简的 Maven 结构。
+
+`day8` 多出来的目录含义：
+
+- `.mvn`：Maven 相关配置目录，目前为空，可以不管。
+- `src/main/resources`：放配置文件、SQL、图片等资源文件。
+- `src/test/java`：放测试代码。
+
+这些目录不会影响 Java 代码编写。当前 IDEA 已经在 Maven 配置中识别了：
+
+```text
+$PROJECT_DIR$/JAVA/day8/pom.xml
+```
+
+因此 `day8` 已经是 Maven 项目。只要在 `src/main/java` 下写代码即可。
+
+如果想让视觉结构和 `day7` 完全一致，可以删除空的 `.mvn`、`src/main/resources` 和 `src/test/java`；但没有必要，因为它们属于 Maven 项目常见目录。
+
+### 28. 同样创建 Maven 模块但结构不同的原因
+
+用户反馈：在另一台电脑上用同样方式创建 Maven 模块时，结构像 `day7` 一样更精简；但当前电脑创建的 `day8` 多出了 `.mvn`、`src/main/resources`、`src/test/java`。
+
+主要原因可能有三类：
+
+1. IDEA 版本或 Maven 创建模板不同。不同版本的 IDEA 对 Maven 项目的默认生成目录不完全一样，有的只生成 `src/main/java`，有的会同时生成 `resources` 和 `test` 目录。
+
+2. 创建向导中的选项不同。例如是否启用 Maven Wrapper、是否生成测试目录、是否使用某个 archetype，都会影响最终结构。
+
+3. Git 不跟踪空目录。如果另一台电脑上的项目是从 Git 拉下来的，空的 `src/main/resources`、`src/test/java`、`.mvn` 即使曾经存在，也不会被 Git 保存和同步。只有目录中有文件时，Git 才会跟踪它。
+
+因此 `day7` 和 `day8` 的差异不代表项目有问题。Maven 真正关键的是：
+
+```text
+pom.xml
+src/main/java
+```
+
+`src/main/resources`、`src/test/java` 和 `.mvn` 都是可选或辅助目录。当前学习阶段只需要在 `src/main/java` 中写代码即可。
+
+### 29. Maven 中 `test` 文件夹的作用
+
+`src/test/java` 是 Maven 约定的测试代码目录，用来放专门测试程序是否正确的 Java 代码。
+
+常见 Maven 目录分工：
+
+```text
+src/main/java      放正式 Java 源代码
+src/main/resources 放正式程序用到的资源文件
+src/test/java      放测试 Java 代码
+src/test/resources 放测试时用到的资源文件
+```
+
+例如正式代码中有一个 `Student` 类，可以在 `src/test/java` 中写 `StudentTest`，专门测试 `Student` 的方法是否正确。
+
+执行 Maven 测试命令时：
+
+```bash
+mvn test
+```
+
+Maven 会编译并运行 `src/test/java` 下的测试代码。
+
+当前学习阶段如果还没有学单元测试，可以暂时不用管 `src/test/java`。平时练习 Java 代码仍然写在：
+
+```text
+src/main/java
 ```
