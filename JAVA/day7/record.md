@@ -392,3 +392,103 @@ git push origin --delete tt
 ```
 
 本次检查 `JAVA/day7` 仓库时，当前分支是 `main`，本地分支列表中暂未发现 `tt`。因此需要先确认 IDEA 当前打开的项目是否就是 `JAVA/day7`，以及 `tt` 是本地分支还是远程分支。
+
+## 2026-09-09
+
+### 20. `抽象类实战` 案例评审
+
+本次检查目录：
+
+```text
+src/main/java/抽象类实战/
+├── Animal.java
+├── Cat.java
+├── Dog.java
+└── AnimalTest.java
+```
+
+当前实现与需求基本一致：
+
+- `Animal` 使用 `abstract` 修饰，说明它是抽象类。
+- `Animal` 中定义了私有成员变量 `age` 和 `name`。
+- `Animal` 提供了无参构造方法和有参构造方法。
+- 通过 getter/setter 对成员变量进行封装。
+- `Animal` 定义抽象方法 `eat()`。
+- `Cat`、`Dog` 继承 `Animal`，并使用 `@Override` 实现各自的 `eat()`。
+- `AnimalTest` 使用 `Animal` 类型的引用指向 `Cat`、`Dog` 对象，验证了抽象类引用和成员方法多态。
+
+关键代码结构：
+
+```java
+public abstract class Animal {
+    private int age;
+    private String name;
+
+    public Animal() {
+    }
+
+    public Animal(int age, String name) {
+        this.age = age;
+        this.name = name;
+    }
+
+    public abstract void eat();
+}
+```
+
+```java
+Animal c = new Cat(1, "依依");
+Animal d = new Dog(48, "冰");
+
+c.eat();
+d.eat();
+```
+
+本次使用 JDK 8 的 `javac` 直接编译并运行通过，说明源码没有编译错误。终端中的中文输出出现乱码，是控制台编码与输出编码不一致导致的显示问题，不影响 Java 程序逻辑。
+
+### 21. `抽象类实战` 改进建议
+
+当前没有必须修复的功能性错误，但可以继续改进：
+
+1. 测试类目前使用了有参构造方法，没有实际验证无参构造方法和 setter。可以补充：
+
+```java
+Cat c = new Cat();
+c.setAge(1);
+c.setName("依依");
+```
+
+2. 当前构造方法参数顺序是 `age, name`。更符合日常表达的顺序通常是 `name, age`，建议父类和子类统一调整，避免调用时混淆。
+
+3. `System.out.println(c.getAge() + c.getName())` 虽然可以运行，但输出可读性一般，建议改为：
+
+```java
+System.out.println(c.getName() + "，" + c.getAge() + "岁");
+```
+
+4. `Cat` 和 `Dog` 中的无效注释代码 `//c.eat()`、`//d.eat()` 可以删除，避免保留无用代码。
+
+5. `Dog.eat()` 中的“小狗爱吃屎”只是输出文本，不影响语法和多态逻辑；为了让案例表达更自然，可以改成“小狗爱吃骨头”或“小狗爱吃狗粮”。
+
+当前学习进度：
+
+```text
+[已完成] 抽象类和抽象方法的实际定义
+[已完成] 子类继承抽象类并实现抽象方法
+[已完成] 抽象类引用指向不同子类对象
+[已完成] 通过多态调用 Cat、Dog 的 eat()
+[待补充] 无参构造方法和 setter 的测试
+[待巩固] 构造方法参数顺序和测试输出的规范性
+
+### 22. 关于 `Dog.eat()` 输出内容的说明
+
+之前建议将 `Dog.eat()` 中的输出：
+
+```java
+System.out.println("小狗爱吃屎");
+```
+
+改成“小狗爱吃骨头”，只是为了让教学案例中的表达更常见、更自然，不是因为原代码存在语法或逻辑错误。
+
+用户明确选择保留“小狗爱吃屎”。该输出属于自定义业务文本，不影响抽象类、方法重写和多态调用，因此保留原实现，不修改 `Dog.java`。
+```
